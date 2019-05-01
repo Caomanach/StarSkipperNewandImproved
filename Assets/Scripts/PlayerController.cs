@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
         JumpingIfs();
         CharacterFacing();
         Collision();
+        Debug.Log("Jumping:" + jumping + "Aiming:" + j_script.aiming);
+        Debug.Log("Current jump amount" + currentJumpAmount);
         //Debug.Log(rb.gravityScale); (Test to see if the gravity on the RB (RigidBody) was changing
     }
 
@@ -71,27 +73,35 @@ public class PlayerController : MonoBehaviour
     {
         if (j_script.aiming == true) //Checking if player has aiming on meaning they have either chained a jump or they have initiated aiming on the ground
         {
-            jumping = true; //When player begins aiming the jumping boolean will be set to true which will allow the gravity scale to change and stop the player from using WASD
+            
             a_script.ArrowShow = true; // Setting the Arrow to be visible in the scene by setting ArrowShow boolean form ArrowRotation script to true
-            if (Input.GetKeyDown(KeyCode.Space))
+            
+            if (a_script.collidedObjectArrow.GetComponent<Renderer>().bounds.Intersects(a_script.Arrow.GetComponent<Renderer>().bounds) )
             {
-                if (a_script.collidedObjectArrow.GetComponent<Renderer>().bounds.Intersects(a_script.Arrow.GetComponent<Renderer>().bounds)) //Making sure that the player is not aiming at an impassable area when they attempt to jump, should they try to do so all that will happen is a debug line will print
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("you can't jump into a wall from the same wall...");
                 }
-                else // If there are no dangers or major obstacles in players way when thet press the spacebar then they will begin the jumping sequence
+            }
+            else// If there are no dangers or major obstacles in players way when thet press the spacebar then they will begin the jumping sequence
+            {
+                Debug.Log("Else if working");
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    Debug.Log("Deku");
                     j_script.LaunchPlayer();//Calling LaunchPlayer function which gathers the necessary information needed to run the Jump function within this script
-                    currentJumpAmount = currentJumpAmount + 1; //Adding one to the current amount of jumps done in this run, this is used in checking to see if the player has moved in the necessary time since their last jump or they will simply fall
                 }
+               
             }
         }
         else if (j_script.aiming == false) //In the instance where the aiming boolean is false run the below script
         {
+            
             a_script.ArrowShow = false; // Turning of arrow visibility
             if (Input.GetKeyDown(KeyCode.Space) && jumping == false && rb.velocity.y== 0) //Checking that the player has no downward or upward momentum and is not currently jumping before they can begin to aim
             {
                 j_script.aiming = true; // If player is currently stationary and not aiming or jumping and presses the spacebar then aiming boolean will be set to true leading to the above if statement
+                jumping = true; //When player begins aiming the jumping boolean will be set to true which will allow the gravity scale to change and stop the player from using WASD
             }
         }
     }
@@ -104,6 +114,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 1; // When player is not jumping the gravity will be at its normal state
             moveInput = Input.GetAxisRaw("Horizontal"); //Gets horizontal input from either WASD key layout or controller and sets the float moveInput to that value
             rb.velocity = new Vector2(moveInput * speed, rb.velocity.y); // Sets velocity of the rigidbody to be the moveInput set above multiplied by the set speed float (Horizontal direction) and the current velocity in the y direction
+            currentJumpAmount = 0;
         }
         else if (jumping == true)
         {
@@ -127,17 +138,20 @@ public class PlayerController : MonoBehaviour
 //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     void Collision() //This handles the collision with the objects the player can launch of such as wall and ones they cannot that kill their momentum, in this case the floor, these are organised by using tags which can be found in the inspector
     {
-        if (jumping == true)
+        if (jumping == true && j_script.aiming != true)
         {
             if (ps_script.collidedObject.tag == "LaunchingObject") // Checking if object that player collided with is listed as one of the LaunchingObjects
             {
+                Debug.Log("Did it");
                 j_script.aiming = true; // If that is the case then the player can launch of that object and continue their jump, turn on aiming arrow
                 ps_script.collidedObject = null; //Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
                 landedJumpAmount = currentJumpAmount; //Keeping track of the landed jump amount which is how many jumps have been landed on the Launching objects, this serves no purpose but to be entertaining to print in the debug
+
                 StartCoroutine(DroppingAim()); // Running a Co-routine in order to give the player a timer before the jumping automatically stops to encourage faster gameplay and response times, they must jump before the timer runs out
             }
-            if (ps_script.collidedObject.tag == "StoppingObject") // Checking if object player collides with is listed as a one that they should stop on
+            if (ps_script.collidedObject.tag == "StoppingObject" && currentJumpAmount > 1) // Checking if object player collides with is listed as a one that they should stop on
             {
+                Debug.Log("End my suffering");   
                 jumping = false; // Sets jumping to false thus putting the player in basic movement mode
                 ps_script.collidedObject = null;//Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
             }
@@ -147,11 +161,112 @@ public class PlayerController : MonoBehaviour
     IEnumerator DroppingAim() // IEnumerator used for delays
     {
         interimJumpAmount = currentJumpAmount; //Setting the interim that will be used to compare the current jump amount to the one form before the delay
-        yield return new WaitForSeconds(10); //Delay of two seconds
+        StartCoroutine(CheckOfInterim());
         if (currentJumpAmount == interimJumpAmount) //Checking that player hasn't jumped since before delay
         {
-            jumping = false; // After delay is finished the jumping boolean is set to false
-            j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
+            StartCoroutine(CheckOfInterim());
+            if (currentJumpAmount == interimJumpAmount)
+            {
+                StartCoroutine(CheckOfInterim());
+                if (currentJumpAmount == interimJumpAmount)
+                {
+                    StartCoroutine(CheckOfInterim());
+                    if (currentJumpAmount == interimJumpAmount)
+                    {
+                        StartCoroutine(CheckOfInterim());
+                        if (currentJumpAmount == interimJumpAmount)
+                        {
+                            jumping = false; // After delay is finished the jumping boolean is set to false
+                            Debug.Log("Failure 2");
+                            currentJumpAmount = 0;
+                            j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
+                        }
+                    }
+                }
+                    
+            }
+        }
+    }
+
+    IEnumerator CheckOfInterim()
+    {
+        yield return new WaitForSeconds(.1f); //Delay of two seconds
+        if (currentJumpAmount == interimJumpAmount)
+        {
+            yield return new WaitForSeconds(.1f); //Delay of two seconds
+            if (currentJumpAmount == interimJumpAmount)
+            {
+                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                if (currentJumpAmount == interimJumpAmount)
+                {
+                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                    if (currentJumpAmount == interimJumpAmount)
+                    {
+                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                        if (currentJumpAmount == interimJumpAmount)
+                        {
+                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                            if (currentJumpAmount == interimJumpAmount)
+                            {
+                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                if (currentJumpAmount == interimJumpAmount)
+                                {
+                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                    if (currentJumpAmount == interimJumpAmount)
+                                    {
+                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                        if (currentJumpAmount == interimJumpAmount)
+                                        {
+                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                            if (currentJumpAmount == interimJumpAmount)
+                                            {
+                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                if (currentJumpAmount == interimJumpAmount)
+                                                {
+                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                    if (currentJumpAmount == interimJumpAmount)
+                                                    {
+                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                        if (currentJumpAmount == interimJumpAmount)
+                                                        {
+                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                            if (currentJumpAmount == interimJumpAmount)
+                                                            {
+                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                {
+                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                    {
+                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                        {
+                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                            if (currentJumpAmount == interimJumpAmount)
+                                                                            {
+                                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                                {
+                                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                 
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
    

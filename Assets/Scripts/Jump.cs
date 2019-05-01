@@ -28,6 +28,7 @@ public class Jump : MonoBehaviour
     public void LaunchPlayer() //Function that is used to get all the necessary factors in launching the player character
     {
         aiming = false; //Setting aiming to false as this function is only called when the player has aimed and then chosen where they wish to propel
+        Debug.Log("Kill me");
         float launchDirX = launchDirection.position.x; //Extracting the X Direction from the empty Aiming gameObject mentioned prior
         float launchDirY = launchDirection.position.y; //Extracting the Y Direction from the empty Aiming gameObject mentioned prior
         float posX = transform.position.x; // Getting the current X position of player at time of jump
@@ -35,6 +36,7 @@ public class Jump : MonoBehaviour
 
         //Launch direction is the difference between our destination and our current position
         Vector2 launchDir = new Vector2(launchDirX - posX, launchDirY - posY); //This is used to direct where we will be shot along the aim of the arrow
+        p_Script.currentJumpAmount = p_Script.currentJumpAmount + 1;
         p_Script.Jump(launchDir, launchForce); //Running the Jump script in the player controller adding in two variables from this script
     }
 }

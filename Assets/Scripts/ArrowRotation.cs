@@ -8,7 +8,7 @@ public class ArrowRotation : MonoBehaviour
     public bool ArrowShow;//Boolean used to determing if the arrow should be visible or not
     public GameObject Arrow; //Reference to the game object that's used to hold the arrow sprite in the right location around the player
     //Attempts at ray tracing
-    //public float offset; 
+    public float offset;
     //public float rayDistance;
     //public LayerMask whatIsSolid;
     public PlayerController p_script; //Refrence to the PlayerController script which is added by dragging and dropping a refrence to the gameobject holding aforementioned scirpt in the scene into the Inspector and specifically the section that covers this script
@@ -117,10 +117,10 @@ public class ArrowRotation : MonoBehaviour
     {
         collidedObjectArrow = collision.gameObject;// Setting the object that collided with the arrow to a variable to be refrenced in the PlayerController script to see if the jump chain can continue of it will stop depending on the surface landed on
     }
-    private void OnCollisionExit2D(Collision2D collision) //Running a function when the collision to the object in the last section ends
-    {
-        collidedObjectArrow = null; //Setting object to null so that the player is unable to re-aim in the air
-    }
+    //private void OnCollisionExit2D(Collision2D collision) //Running a function when the collision to the object in the last section ends
+    //{
+    //    collidedObjectArrow; //Setting object to null so that the player is unable to re-aim in the air
+    //}
 }
 
 //************************************************************MISTAKES****************************************************************************************************************************************************************************************************************************************************************************************************************************************
