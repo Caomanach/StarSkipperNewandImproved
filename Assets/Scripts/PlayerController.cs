@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
                 ps_script.collidedObject = null; //Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
                 landedJumpAmount = currentJumpAmount; //Keeping track of the landed jump amount which is how many jumps have been landed on the Launching objects, this serves no purpose but to be entertaining to print in the debug
 
-                StartCoroutine(DroppingAim()); // Running a Co-routine in order to give the player a timer before the jumping automatically stops to encourage faster gameplay and response times, they must jump before the timer runs out
+                StartCoroutine(CheckOfInterim()); // Running a Co-routine in order to give the player a timer before the jumping automatically stops to encourage faster gameplay and response times, they must jump before the timer runs out
             }
             if (ps_script.collidedObject.tag == "StoppingObject" && currentJumpAmount > 1) // Checking if object player collides with is listed as a one that they should stop on
             {
@@ -157,39 +157,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-//************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-    IEnumerator DroppingAim() // IEnumerator used for delays
-    {
-        interimJumpAmount = currentJumpAmount; //Setting the interim that will be used to compare the current jump amount to the one form before the delay
-        StartCoroutine(CheckOfInterim());
-        if (currentJumpAmount == interimJumpAmount) //Checking that player hasn't jumped since before delay
-        {
-            StartCoroutine(CheckOfInterim());
-            if (currentJumpAmount == interimJumpAmount)
-            {
-                StartCoroutine(CheckOfInterim());
-                if (currentJumpAmount == interimJumpAmount)
-                {
-                    StartCoroutine(CheckOfInterim());
-                    if (currentJumpAmount == interimJumpAmount)
-                    {
-                        StartCoroutine(CheckOfInterim());
-                        if (currentJumpAmount == interimJumpAmount)
-                        {
-                            jumping = false; // After delay is finished the jumping boolean is set to false
-                            Debug.Log("Failure 2");
-                            currentJumpAmount = 0;
-                            j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
-                        }
-                    }
-                }
-                    
-            }
-        }
-    }
-
+    //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     IEnumerator CheckOfInterim()
     {
+        interimJumpAmount = currentJumpAmount; //Setting the interim that will be used to compare the current jump amount to the one form before the delay
         yield return new WaitForSeconds(.1f); //Delay of two seconds
         if (currentJumpAmount == interimJumpAmount)
         {
@@ -248,7 +219,82 @@ public class PlayerController : MonoBehaviour
                                                                                 if (currentJumpAmount == interimJumpAmount)
                                                                                 {
                                                                                     yield return new WaitForSeconds(.1f); //Delay of two seconds
-                                                                                 
+                                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                                    {
+                                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                                        {
+                                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                            if (currentJumpAmount == interimJumpAmount)
+                                                                                            {
+                                                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                                                {
+                                                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                                                    {
+                                                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                                                        {
+                                                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                            if (currentJumpAmount == interimJumpAmount)
+                                                                                                            {
+                                                                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                                                                {
+                                                                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                                                                    {
+                                                                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                                                                        {
+                                                                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                            if (currentJumpAmount == interimJumpAmount)
+                                                                                                                            {
+                                                                                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                {
+                                                                                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                    {
+                                                                                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                        {
+                                                                                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                            if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                            {
+                                                                                                                                                yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                                if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                                {
+                                                                                                                                                    yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                                    if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                                    {
+                                                                                                                                                        yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                                        if (currentJumpAmount == interimJumpAmount)
+                                                                                                                                                        {
+                                                                                                                                                            yield return new WaitForSeconds(.1f); //Delay of two seconds
+                                                                                                                                                            jumping = false; // After delay is finished the jumping boolean is set to false
+                                                                                                                                                            Debug.Log("Failure 2");
+                                                                                                                                                            currentJumpAmount = 0;
+                                                                                                                                                            j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
+                                                                                                                                                        }
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
@@ -269,5 +315,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-   
+
 }
