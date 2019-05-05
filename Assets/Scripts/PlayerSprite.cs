@@ -23,7 +23,6 @@ public class PlayerSprite : MonoBehaviour
     void Update()
     {
         p_Script.facingRight = facingRightTrueFalse;
-
     }
 
 //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
@@ -39,5 +38,26 @@ public class PlayerSprite : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) //Checking which 2D object that the collision box of the Player Sprite collided with and setting it so it can be passed for the check in the PlayerController Script
     {
         collidedObject = collision.gameObject;//Setting the object collided with into a usable, callable variable
+        if (collidedObject.tag == "StoppingObject")
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+        }
+    }
+
+//************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+    public void RotateWhenInAir()
+    {
+        if (collidedObject.tag == "LaunchingObjectLeft")
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 270);
+        }
+        else if (collidedObject.tag == "LaunchingObjectRight")
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 90);
+        }
+        else if (collidedObject.tag == "LaunchingObject")
+        {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 180);
+        }
     }
 }

@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
             
             a_script.ArrowShow = true; // Setting the Arrow to be visible in the scene by setting ArrowShow boolean form ArrowRotation script to true
             
+            
             if (a_script.collidedObjectArrow.GetComponent<Renderer>().bounds.Intersects(a_script.Arrow.GetComponent<Renderer>().bounds) )
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -154,23 +155,24 @@ public class PlayerController : MonoBehaviour
     {
         if (jumping == true && j_script.aiming != true)
         {
-            if (ps_script.collidedObject.tag == "LaunchingObject") // Checking if object that player collided with is listed as one of the LaunchingObjects
+            if (ps_script.collidedObject.tag == "LaunchingObjectRight"|| ps_script.collidedObject.tag == "LaunchingObjectLeft" || ps_script.collidedObject.tag == "LaunchingObjectUp") // Checking if object that player collided with is listed as one of the LaunchingObjects
             {
                 Debug.Log("Did it");
+                ps_script.RotateWhenInAir();
                 j_script.aiming = true; // If that is the case then the player can launch of that object and continue their jump, turn on aiming arrow
-                ps_script.collidedObject = null; //Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
+                ps_script.collidedObject = null; //Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit(removed for rotating animations)
                 landedJumpAmount = currentJumpAmount; //Keeping track of the landed jump amount which is how many jumps have been landed on the Launching objects, this serves no purpose but to be entertaining to print in the debug
-
                 StartCoroutine(CheckOfInterim()); // Running a Co-routine in order to give the player a timer before the jumping automatically stops to encourage faster gameplay and response times, they must jump before the timer runs out
                 ps_script.animator.SetBool("launch", false);
                 ps_script.animator.SetBool("land", true);
             }
             if (ps_script.collidedObject.tag == "StoppingObject" && currentJumpAmount > 1) // Checking if object player collides with is listed as a one that they should stop on
             {
-                Debug.Log("End my suffering");   
+                Debug.Log("End my suffering");
+                ps_script.RotateWhenInAir();
                 jumping = false; // Sets jumping to false thus putting the player in basic movement mode
                 ps_script.animator.SetBool("IsJumping", false);
-                ps_script.collidedObject = null;//Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
+                ps_script.collidedObject = null;//Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit(removed for rotating animations)
                 ps_script.animator.SetBool("launch", false);
                 ps_script.animator.SetBool("land", true);
             }
@@ -297,7 +299,6 @@ public class PlayerController : MonoBehaviour
                                                                                                                                                             currentJumpAmount = 0;
                                                                                                                                                             j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
                                                                                                                                                             ps_script.animator.SetBool("IsJumping", false);
-
                                                                                                                                                         }
                                                                                                                                                     }
                                                                                                                                                 }
