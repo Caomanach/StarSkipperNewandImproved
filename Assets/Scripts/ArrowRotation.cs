@@ -12,7 +12,7 @@ public class ArrowRotation : MonoBehaviour
     //public float rayDistance;
     //public LayerMask whatIsSolid;
     public PlayerController p_script; //Refrence to the PlayerController script which is added by dragging and dropping a refrence to the gameobject holding aforementioned scirpt in the scene into the Inspector and specifically the section that covers this script
-    public PlayerSprite ps__script; // Refrence to the PlayerSprite script same as above
+    public PlayerSprite ps_script; // Refrence to the PlayerSprite script same as above
     public GameObject collidedObjectArrow; //Created an empty gameObject variable to be used to store which objects the arrow collides with while aiming to be refrenced in the PlayerController later
     //Trying to make the mouse be less responsive or turn of as a response to attempting to aim at a wall while on it leading to a glitch
     //public bool mouseInputOnorOff = true;
@@ -31,7 +31,6 @@ public class ArrowRotation : MonoBehaviour
         Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position; //Getting the difference between the camera and the location of the mouse on the screen taking away the player's location on the screen 
         float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg; //Creating a float variable to hold the Z rotator which will be used to rotate around the Player, Unity puts all angles in radians so it must be converted into degrees as seen here
         transform.rotation = Quaternion.Euler(0f, 0f, rotZ + offset);// Rotating the arrow based on the mouse position using a Quaternion(?), no clue what it does but the Euler portion is used to ensure that it is given as degrees and not radians which gives more precission and better control to the player
-
 //*************************************************MISTAKES********************************************************************************************************************************************************************************************************************************************************************************************************************************************
         //Debug.Log(transform.eulerAngles.z);
 
@@ -46,7 +45,7 @@ public class ArrowRotation : MonoBehaviour
 
         //}
 
-//************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+        //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
         if (ArrowShow == true) //Checking to see if the arrow needs to be visible
         {
             Arrow.GetComponent<Renderer>().enabled = true; //Setting the arrow to be visible to the player
@@ -121,32 +120,50 @@ public class ArrowRotation : MonoBehaviour
     //{
     //    collidedObjectArrow; //Setting object to null so that the player is unable to re-aim in the air
     //}
+
+    //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+    public void AimingFlip()
+    {
+        if(p_script.j_script.aiming == true)
+        {
+            if (ps_script.facingRightTrueFalse == false && transform.eulerAngles.z < 90 || ps_script.facingRightTrueFalse == false && transform.eulerAngles.z > 270)
+            {
+                Debug.Log("Flip from left to right");
+                ps_script.flip();
+            }
+            if (ps_script.facingRightTrueFalse == true && transform.eulerAngles.z > 90 && transform.eulerAngles.z < 270)
+            {
+                Debug.Log("Flip from right to left");
+                ps_script.flip();
+            }
+        }
+    }
 }
 
 //************************************************************MISTAKES****************************************************************************************************************************************************************************************************************************************************************************************************************************************
-        //IEnumerator HittingEdgeOfAiming()
-        //{
-        //    Debug.Log("mOUSEY WOUSEY");
-        //    mouseInputOnorOff = false;
-        //    yield return new WaitForSeconds(2.5f);
-        //    mouseInputOnorOff = true;
+//IEnumerator HittingEdgeOfAiming()
+//{
+//    Debug.Log("mOUSEY WOUSEY");
+//    mouseInputOnorOff = false;
+//    yield return new WaitForSeconds(2.5f);
+//    mouseInputOnorOff = true;
 
-        //}
-        //void Raycasting()
-        //{
-        //    RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Arrow.transform.position, 10000, whatIsSolid);
-        //    if (hitInfo.collider != null)
-        //    {
-        //        Debug.Log("Collided");
-        //        if (hitInfo.collider.CompareTag("LaunchingObject"))
-        //        {
-        //            Debug.Log("Arrow pointing at or through wall");
-        //        }
-        //        if (hitInfo.collider.CompareTag("StoppingObject"))
-        //        {
-        //            Debug.Log("Arrow pointing at floor");
-        //        }
-        //    }
+//}
+//void Raycasting()
+//{
+//    RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Arrow.transform.position, 10000, whatIsSolid);
+//    if (hitInfo.collider != null)
+//    {
+//        Debug.Log("Collided");
+//        if (hitInfo.collider.CompareTag("LaunchingObject"))
+//        {
+//            Debug.Log("Arrow pointing at or through wall");
+//        }
+//        if (hitInfo.collider.CompareTag("StoppingObject"))
+//        {
+//            Debug.Log("Arrow pointing at floor");
+//        }
+//    }
 
 
-        //}
+//}

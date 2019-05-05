@@ -11,8 +11,9 @@ public class Jump : MonoBehaviour
     public Transform launchDirection; //The aiming direction which is an empty game object that is placed attatched to the arrow so it rotates with it but is significantly farther ahead 
     public float launchForce = 4000f; //Force the player is launched at, way to high break game but can be changed dynamically in the inspector
     public bool aiming; //Creating the boolean that is used to determine if the player can jump or not
+    public PlayerSprite ps_script;
 
-//************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+    //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     void Start() //Called before beginning of the first frame not in use in this script
     {
 
@@ -28,6 +29,7 @@ public class Jump : MonoBehaviour
     public void LaunchPlayer() //Function that is used to get all the necessary factors in launching the player character
     {
         aiming = false; //Setting aiming to false as this function is only called when the player has aimed and then chosen where they wish to propel
+        ps_script.animator.SetBool("IsJumping", false);
         Debug.Log("Kill me");
         float launchDirX = launchDirection.position.x; //Extracting the X Direction from the empty Aiming gameObject mentioned prior
         float launchDirY = launchDirection.position.y; //Extracting the Y Direction from the empty Aiming gameObject mentioned prior

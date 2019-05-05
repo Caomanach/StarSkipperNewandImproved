@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public PlayerSprite ps_script; //Allowing you to refrence the GameObject that holds the PlayerSprite script in the level by dragging them into the refrence point in the inspector
     public Jump j_script; //Allowing you to refrence the GameObject that holds the Jump script in the level by dragging them into the refrence point in the inspector
     public ArrowRotation a_script; //Allowing you to refrence the GameObject that holds the ArrowRotation script in the level by dragging them into the refrence point in the inspector
+    
     private float moveInput;
     private Rigidbody2D rb;
     public bool facingRight = true;
@@ -17,8 +18,8 @@ public class PlayerController : MonoBehaviour
     public float currentJumpAmount;
     private float interimJumpAmount;
     private float landedJumpAmount;
-
-//************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+    public float move;
+        //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>(); //Adding a refrence to the rigid body located on the player gameobject
@@ -42,6 +43,7 @@ public class PlayerController : MonoBehaviour
         JumpingIfs();
         CharacterFacing();
         Collision();
+        a_script.AimingFlip();
         Debug.Log("Jumping:" + jumping + "Aiming:" + j_script.aiming);
         Debug.Log("Current jump amount" + currentJumpAmount);
         //Debug.Log(rb.gravityScale); (Test to see if the gravity on the RB (RigidBody) was changing
@@ -56,10 +58,12 @@ public class PlayerController : MonoBehaviour
 //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     void StopMovement() // Stops all player motion if aiming
     {
+
         if (jumping == true && j_script.aiming == true)
         {
             rb.constraints = RigidbodyConstraints2D.FreezeAll; //Completely freezes the player on the spot until they jump at which point aiming becomes fales and the else condition kicks in
             // rb.velocity = Vector2.Zero (Old idea to just halt velocity however the above means that outside forces cannot move the player while aiming)
+            ps_script.animator.SetBool("land", false);
         }
         else 
         {
@@ -90,6 +94,7 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("Deku");
                     j_script.LaunchPlayer();//Calling LaunchPlayer function which gathers the necessary information needed to run the Jump function within this script
+                    ps_script.animator.SetBool("launch", true);
                 }
                
             }
@@ -102,6 +107,8 @@ public class PlayerController : MonoBehaviour
             {
                 j_script.aiming = true; // If player is currently stationary and not aiming or jumping and presses the spacebar then aiming boolean will be set to true leading to the above if statement
                 jumping = true; //When player begins aiming the jumping boolean will be set to true which will allow the gravity scale to change and stop the player from using WASD
+                ps_script.animator.SetBool("IsJumping", true);
+                ps_script.animator.SetBool("land", false);
             }
         }
     }
@@ -113,8 +120,12 @@ public class PlayerController : MonoBehaviour
         {
             rb.gravityScale = 1; // When player is not jumping the gravity will be at its normal state
             moveInput = Input.GetAxisRaw("Horizontal"); //Gets horizontal input from either WASD key layout or controller and sets the float moveInput to that value
+            ps_script.animator.SetFloat("speed", Mathf.Abs(moveInput));
             rb.velocity = new Vector2(moveInput * speed, rb.velocity.y); // Sets velocity of the rigidbody to be the moveInput set above multiplied by the set speed float (Horizontal direction) and the current velocity in the y direction
             currentJumpAmount = 0;
+            
+
+
         }
         else if (jumping == true)
         {
@@ -125,13 +136,16 @@ public class PlayerController : MonoBehaviour
  //************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
     void CharacterFacing()
     {
-        if (facingRight == false && moveInput > 0) // Check if player is moving right
+        if(j_script.aiming == false)
         {
-            ps_script.flip(); // Activate the flip function in the Flip script to make player face right
-        }
-        else if (facingRight == true && moveInput < 0) // Check if player is moving left
-        {
-            ps_script.flip(); // Activate the flip function in the Flip script to make player face left
+            if (facingRight == false && moveInput > 0) // Check if player is moving right
+            {
+                ps_script.flip(); // Activate the flip function in the Flip script to make player face right
+            }
+            else if (facingRight == true && moveInput < 0) // Check if player is moving left
+            {
+                ps_script.flip(); // Activate the flip function in the Flip script to make player face left
+            }
         }
     }
 
@@ -148,12 +162,17 @@ public class PlayerController : MonoBehaviour
                 landedJumpAmount = currentJumpAmount; //Keeping track of the landed jump amount which is how many jumps have been landed on the Launching objects, this serves no purpose but to be entertaining to print in the debug
 
                 StartCoroutine(CheckOfInterim()); // Running a Co-routine in order to give the player a timer before the jumping automatically stops to encourage faster gameplay and response times, they must jump before the timer runs out
+                ps_script.animator.SetBool("launch", false);
+                ps_script.animator.SetBool("land", true);
             }
             if (ps_script.collidedObject.tag == "StoppingObject" && currentJumpAmount > 1) // Checking if object player collides with is listed as a one that they should stop on
             {
                 Debug.Log("End my suffering");   
                 jumping = false; // Sets jumping to false thus putting the player in basic movement mode
+                ps_script.animator.SetBool("IsJumping", false);
                 ps_script.collidedObject = null;//Setting the collided object in the PlayerSprite Script to nothing after it has been determined which object has been hit
+                ps_script.animator.SetBool("launch", false);
+                ps_script.animator.SetBool("land", true);
             }
         }
     }
@@ -277,6 +296,8 @@ public class PlayerController : MonoBehaviour
                                                                                                                                                             Debug.Log("Failure 2");
                                                                                                                                                             currentJumpAmount = 0;
                                                                                                                                                             j_script.aiming = false; // After delay is finished the aiming boolean in the Jump script is set to false
+                                                                                                                                                            ps_script.animator.SetBool("IsJumping", false);
+
                                                                                                                                                         }
                                                                                                                                                     }
                                                                                                                                                 }
