@@ -6,6 +6,9 @@ TagManager:
   tags:
   - LaunchingObject
   - StoppingObject
+  - LaunchingObjectLeft
+  - LaunchingObjectRight
+  - LaunchingObjectUp
   layers:
   - Default
   - TransparentFX
