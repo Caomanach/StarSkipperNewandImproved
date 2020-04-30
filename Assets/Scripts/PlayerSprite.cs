@@ -55,7 +55,7 @@ public class PlayerSprite : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 90);
         }
-        else if (collidedObject.tag == "LaunchingObject")
+        else if (collidedObject.tag == "LaunchingObjectUp")
         {
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 180);
         }
